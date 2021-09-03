@@ -1,0 +1,52 @@
+plugins {
+    id 'groovy'
+    id 'maven-publish'
+}
+
+group 'com.yetu.plugin'
+version '1.0.0'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    //gradle sdk
+    implementation gradleApi()
+    //groovy sdk
+    implementation localGroovy()
+    implementation group: 'com.squareup', name: 'javapoet', version: '1.13.0'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.5.4'
+
+}
+
+publishing {
+    publications {
+        // 定义了一个名为 mavenJava 的publication
+        mavenJava(MavenPublication) {
+            //定义插件的在本地 maven 中的 id
+            groupId 'com.yetu.plugin'
+            artifactId 'generateJava'
+            //定义插件的在本地 maven 中的版本号
+            version '1.0.0'
+            //from components.java这句表明是一个java库
+            /**
+             * components.java(由JavaPlugin添加)
+             * components.web(由WarPlugin添加)
+             * components.javaPlatform(由JavaPlatformPlugin添加)
+             * 如果我们需要将一个web项目打包成war包发布，则使用components.web。
+             * 我们当前的例子为jar，则使用components.java。
+             */
+            from components.java
+        }
+    }
+    // 表明 mavenJava 的jar包最终会被发布到本地maven仓库
+    repositories {
+        /*maven {
+            // 发布位置
+            url uri('H:/jars')
+        }*/
+        mavenLocal()
+    }
+}
